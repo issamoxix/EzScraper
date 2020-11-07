@@ -17,3 +17,5 @@ py main.py
 ```
 
 and follow the steps
+
+![Algo](./imgs/step1.PNG)
