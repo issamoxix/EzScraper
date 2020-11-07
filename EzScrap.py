@@ -42,11 +42,28 @@ class Es:
         
     def table_to_csv(self,t_number):
         self.data = []
+        self.parsed_data = []
         self.table = self.doc.find_all('table')[t_number]
         self.rows = len(self.table.find_all('tr'))
+        for h in range(len(self.table.find_all('td'))):
+                if self.table.find_all('td')[h].string == None:
+                    print(h,'/',len(self.table.find_all('td')))
+                    self.table.find_all('td')[h].string = "NaN"
         for r in range(self.rows):
-            self.data.append(self.table.find_all('tr')[r].text.split())
+            arr = self.table.find_all('tr')[r].text.split()
+            print('(',r,'/',self.rows,')')
+            # set the empty td to NaN 
+             
+            for f in range(len(arr)):
+                if ',' in arr[f]:   
+                    print('Replace',f,'/',len(arr))
+                    # replace , to " " in numbers 
+                    arr[f] = arr[f].replace(',','')
+            
+            self.parsed_data.append(arr)
+            
         with open('data'+str(t_number)+'.csv', 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerows(self.data)
+            writer.writerows(self.parsed_data)
+        print('Data Saved in data'+str(t_number)+'.csv file')
            
