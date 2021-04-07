@@ -13,9 +13,5 @@ Run : <br/>
 ## Run the script :
 
 ```sh
-py main.py
+py main.py https://www.example.com/
 ```
-
-and follow the steps
-
-![Algo](./imgs/step1.PNG)

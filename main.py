@@ -1,5 +1,5 @@
 from EzScrap import Es 
-url = input('Enter Url : ')
+import sys
+url = sys.argv[1]
 issam = Es(url)
-
 issam.pross()
