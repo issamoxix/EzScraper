@@ -1,1 +1,1 @@
-from table_to_csv import table_to_csv
+from EzScraper import table_to_csv

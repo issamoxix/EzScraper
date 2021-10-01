@@ -3,3 +3,4 @@
 build/
 EzScraper.egg-info
 dist/
+test.py
