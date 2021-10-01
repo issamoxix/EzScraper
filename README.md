@@ -17,7 +17,7 @@ from EzScraper import table_to_csv
 url = "https://www.worldometers.info/coronavirus/"
 file_name = "CoronaData"
 crawle = table_to_csv(url=url,file_name=file_name)
-crawle.allTable()
+crawle.allTables()
 
 #CoronaData.csv files will be created in the same directory
 ```
