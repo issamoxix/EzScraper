@@ -1,15 +1,23 @@
 # EzScraper
 
-Scrape table from website and save them to a .csv file
+EzScraper allows to Scrape  table data from websites and save them as csv file
 
-## Setup
 
-```sh
-  pip install  -r requirements.txt
+# Setup
+
+```
+pip install EzScraper
 ```
 
-## Run the script :
+## How to use
+```python
+from EzScraper import table_to_csv
+#using corona virus website as example
+#in this example we will get all the tables
+url = "https://www.worldometers.info/coronavirus/"
+file_name = "CoronaData"
+crawle = table_to_csv(url=url,file_name=file_name)
+crawle.allTable()
 
-```sh
-py main.py https://www.example.com/
+#CoronaData.csv files will be created in the same directory
 ```
