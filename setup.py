@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '1.0.0'
+VERSION = '1.1.1'
 DESCRIPTION = 'Scraping HTML Tables from websites to csv file'
 LONG_DESCRIPTION = 'A package that allows to scrape html table from websites easly'
 
