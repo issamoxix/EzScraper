@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '1.1.1'
+VERSION = '1.2'
 DESCRIPTION = 'Scraping HTML Tables from websites to csv file'
 LONG_DESCRIPTION = 'This is a Python package that converts HTML tables to CSV files. It provides a simple and efficient way to extract data from tables and store it in CSV format.'
 
