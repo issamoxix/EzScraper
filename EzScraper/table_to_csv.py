@@ -1,60 +1,75 @@
 import pandas as pd
-import requests as req
-from bs4 import BeautifulSoup as Bs
+import requests
+from bs4 import BeautifulSoup
 import datetime
 import os 
 
 
-class table_to_csv:
-    def __init__(self,url,all=True,index=False,file_name=None):
+class TableToCsv:
+    def __init__(self, url, index=None, all_tables=True, filename=None):
         self.url = url
-        self.all = all
         self.index = index
-        self.file_name=file_name
+        self.all_tables = all_tables
+        self.filename = filename
 
-    # alltables function call the Parse table function and handle params
-    def allTables(self):
-        res = req.get(self.url)
-        soup = Bs(res.text,'html.parser')
-        tables_elem = soup.find_all('table')
-        if self.index:
-            self.ParseTable(tables_elem[int(self.index)-1],self.file_name)
-            return 1
-        if self.all:
-            for i in tables_elem:
-                self.ParseTable(i,self.file_name)
-            return 1
-        
-    #getting data from every row and saving it in array then pushing it to the csv Dataframe
-    #and the first row is the header
-    def ParseTable(self,tableOI,file_name):
-        table_rows_elem = tableOI.find_all('tr')
-        table_headers = []
-        for i in table_rows_elem:
-            if len(i.find_all('td')) == 0:
-                for th in i.find_all('th'):
-                    table_headers.append(th.get_text())
+    def parse_table(self, table_elem, filename):
+        # Find all rows in the table
+        rows = table_elem.find_all('tr')
+
+        # Extract the header row
+        header_row = None
+        for row in rows:
+            if row.find('th') is not None:
+                header_row = row
+                break
+
+        # Extract the table headers
+        headers = []
+        for th in header_row.find_all('th'):
+            headers.append(th.get_text().strip())
+
+        # Extract the table data
+        data = []
+        for row in rows:
+            if row == header_row:
                 continue
-        df = pd.DataFrame(columns=table_headers,index=None)
-        for i in table_rows_elem:
-            data = {}
-            if len(i.find_all('td')) != 0:
-                for td_index in range(0,len(i.find_all('td'))-1):
-                    td = i.find_all('td')[td_index]
-                    data[table_headers[td_index]] = td.get_text().strip()
-                df = df.append(data,ignore_index=True)
-            continue
-        if not file_name:
-            file_name = f"{datetime.datetime.now()}table_data".replace('-','_').replace(':','_').strip()
-        file_name = self.CheckFileExists(file_name)
-        df.to_csv(f'{file_name}.csv')
-        return 1
-    #this function below check if the file exists so we dont get file exists error
-    def CheckFileExists(self,file_name):
-        if os.path.exists(path=file_name+".csv"):
-            try:
-                return self.CheckFileExists(file_name.split('_')[0]+"_"+str(int(file_name.split('_')[1])+1))
-            except:
-                return self.CheckFileExists(file_name+"_0")
-        else:
-            return file_name
+
+            row_data = {}
+            for i, td in enumerate(row.find_all('td')):
+                row_data[headers[i]] = td.get_text().strip()
+
+            data.append(row_data)
+
+        # Create a Pandas DataFrame from the data and write it to a CSV file
+        df = pd.DataFrame(data)
+        if not filename:
+            filename = f"{datetime.datetime.now()}table_data".replace('-','_').replace(':','_').strip()
+        filename = self.check_file_exists(filename)
+        df.to_csv(f'{filename}.csv', index=False)
+
+    def check_file_exists(self, filename):
+        # Check if the file exists, and if it does, add a suffix to the filename to make it unique
+        if os.path.exists(f"{filename}.csv"):
+            parts = filename.rsplit('_', 1)
+            if len(parts) == 1:
+                parts.append('0')
+            else:
+                try:
+                    parts[1] = str(int(parts[1]) + 1)
+                except ValueError:
+                    parts[1] = '0'
+
+            new_filename = '_'.join(parts)
+            return self.check_file_exists(new_filename)
+
+        return filename
+
+    def extract_tables(self):
+        res = requests.get(self.url)
+        soup = BeautifulSoup(res.text, 'html.parser')
+        tables = soup.find_all('table')
+        if self.index is not None:
+            self.parse_table(tables[int(self.index)], self.filename)
+        elif self.all_tables:
+            for table in tables:
+                self.parse_table(table, self.filename)
