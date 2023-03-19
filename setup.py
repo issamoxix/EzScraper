@@ -9,7 +9,7 @@ with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
 
 VERSION = '1.1.1'
 DESCRIPTION = 'Scraping HTML Tables from websites to csv file'
-LONG_DESCRIPTION = 'A package that allows to scrape html table from websites easly'
+LONG_DESCRIPTION = 'This is a Python package that converts HTML tables to CSV files. It provides a simple and efficient way to extract data from tables and store it in CSV format.'
 
 # Setting up
 setup(
